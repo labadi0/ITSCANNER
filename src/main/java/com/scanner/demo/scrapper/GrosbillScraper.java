@@ -14,6 +14,7 @@ import com.scanner.demo.entities.Laptop;
 
 import me.tongfei.progressbar.ProgressBar;
 
+
 public class GrosbillScraper {
 	
 	public static void main(String[] args) {
@@ -31,7 +32,7 @@ public class GrosbillScraper {
 				for(String link : getPageLinks(currentPage)) {
 					countLaptop++;
 					System.out.println("############################################################################");
-					System.out.println("Extracting laptop n�" + countLaptop + "...");
+					System.out.println("Extracting laptop n°" + countLaptop + "...");
 					
 					scrapLaptopPage(link, laptops);
 				}
@@ -56,7 +57,7 @@ public class GrosbillScraper {
 			
 			name = doc.getElementsByClass("title_fiche").text().replace("PC portable ", "").trim();
 			
-			price = doc.getElementsByAttributeValue("property", "product:price:amount").attr("content").trim() + "�";
+			price = doc.getElementsByAttributeValue("property", "product:price:amount").attr("content").trim() + "€";
 			price = price.contains(",") ? price.replace(",", ".") : price;
 			
 			JSONObject jsonData = getJsonCharacteristics(doc);
@@ -64,12 +65,12 @@ public class GrosbillScraper {
 			reference = getReference(doc, jsonData);
 			image = getImage(doc, jsonData);
 			
-//			System.out.println("lien : " + url);
-//			System.out.println("source : Grosbill");
-//			System.out.println("nom : " + name);
-//			System.out.println("prix : " + price);
-//			System.out.println("reference : " + reference);
-//			System.out.println("image : " + image);
+			System.out.println("lien : " + url);
+			System.out.println("source : Grosbill");
+			System.out.println("nom : " + name);
+			System.out.println("prix : " + price);
+			System.out.println("reference : " + reference);
+			System.out.println("image : " + image);
 
 			Laptop laptop = new Laptop();
 			laptop.setSource("Grosbill");
@@ -79,7 +80,6 @@ public class GrosbillScraper {
 			laptop.setImageUri(image);
 			laptop.setPrice(price);
 			extractCharacteristics(doc, laptop);
-			System.out.println(laptop);
 			
 			laptops.add(laptop);
 		} catch (IOException e) {
@@ -109,9 +109,9 @@ public class GrosbillScraper {
 				
 				switch(section.toLowerCase()) {
 				case "os":
-				case "syst�me":
-				case "syst�me d'exploitation":
-				case "version syst�me d'exploitation":
+				case "système":
+				case "système d'exploitation":
+				case "version système d'exploitation":
 					os = content;
 					break;
 				case "type de processeur":
@@ -127,33 +127,33 @@ public class GrosbillScraper {
 					}
 					cpu = content;
 					break;
-				case "m�moire":
-				case "taille de la m�moire":
-				case "taille m�moire vive":
+				case "mémoire":
+				case "taille de la mémoire":
+				case "taille mémoire vive":
 				case "ram":
-				case "m�moire, standard":
+				case "mémoire, standard":
 					ram = content;
 					break;
 				case "ssd":
 				case "disque dur":
 				case "stockage":
-				case "capacit� de stockage totale":
+				case "capacité de stockage totale":
 				case "stockage principal":
 					storage = content;
 					break;
-				case "taille de l'�cran":
+				case "taille de l'écran":
 					screenSize = content.replace("pouces", "").trim();
 				case "type":
 					if(content.contains("\"")) {
 						screenSize = content.replace("\"", "");
 					}
 					break;
-				case "r�solution max":
+				case "résolution max":
 					if(ScrapingUtilities.stringHasDigits(content, 3)) {
 						screenResolution = content.replace("pixels", "").trim();
 					}
-				case "r�solution":
-					if(!content.toLowerCase().contains("m�gapixel") && ScrapingUtilities.stringHasDigits(content, 3)) {
+				case "résolution":
+					if(!content.toLowerCase().contains("mégapixel") && ScrapingUtilities.stringHasDigits(content, 3)) {
 						screenResolution = content;
 					}
 					break;
@@ -189,7 +189,7 @@ public class GrosbillScraper {
 			case "processeur":
 				cpu = cpu == null || cpu.trim() == "" ? typeContent : cpu;
 				break;
-			case "m�moire":
+			case "mémoire":
 				ram = ram == null || ram.trim() == "" ? typeContent : ram;
 				break;
 			case "ssd":
@@ -205,14 +205,14 @@ public class GrosbillScraper {
 			}
 		}
 				
-//		System.out.println("screenSize : " + screenSize);
-//		System.out.println("screenResolution : " + screenResolution);
-//		System.out.println("cpu : " + cpu);
-//		System.out.println("storage : " + storage);
-//		System.out.println("ram : " + ram);
-//		System.out.println("os: " + os);
-//		System.out.println("weight : " + weight);
-//		System.out.println("gpu : " + gpu);
+		System.out.println("screenSize : " + screenSize);
+		System.out.println("screenResolution : " + screenResolution);
+		System.out.println("cpu : " + cpu);
+		System.out.println("storage : " + storage);
+		System.out.println("ram : " + ram);
+		System.out.println("os: " + os);
+		System.out.println("weight : " + weight);
+		System.out.println("gpu : " + gpu);
 		
 		laptop.setScreenSize(screenSize);
 		laptop.setScreenResolution(screenResolution);

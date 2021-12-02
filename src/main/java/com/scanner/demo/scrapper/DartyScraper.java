@@ -53,7 +53,7 @@ public class DartyScraper {
 
 				Document doc = getDoc(i, url);
 				if (doc.getAllElements().toString()
-						.contains("ATTENTION : la page demand�e n'existe pas ou n'est plus disponible.")) {
+						.contains("ATTENTION : la page demandée n'existe pas ou n'est plus disponible.")) {
 					System.err.println("page not working i is" + i);
 					break;
 				}
@@ -214,16 +214,16 @@ public class DartyScraper {
 				 * System.out.println("dkhelt hna 5"); } }
 				 */
 
-				if (th.matches(".*Mod�le du processeur.*")) {
+				if (th.matches(".*Modèle du processeur.*")) {
 					cpu += " " + e.select("tr > td > ul > li").text();
 					laptop.setCpu(cpu);
 				} else if (th.matches(".*carte graphique.*")) {
 					gpu += " " + e.select("tr > td > ul > li").text();
 					laptop.setGpu(gpu);
-				} else if (th.matches(".*Caract�ristiques de l'�cran.*")) {
+				} else if (th.matches(".*Caractéristiques de l'écran.*")) {
 					resolution += " " + e.select("tr > td > ul > li").text();
 					laptop.setScreenResolution(resolution);
-				} else if (th.matches(".*R�solution.*")) {
+				} else if (th.matches(".*Résolution.*")) {
 					resolution += " " + e.select("tr > td > ul > li").text();
 					laptop.setScreenResolution(resolution);
 				} else if (th.matches(".*RAM.*")) {
@@ -235,19 +235,19 @@ public class DartyScraper {
 				} else if (th.matches(".*Code.*")) {
 					reference = e.select("tr > td > ul > li").text();
 					laptop.setReference(reference);
-				} else if (th.matches(".*Taille de l'�cran.*")) {
+				} else if (th.matches(".*Taille de l'écran.*")) {
 					screenSize = e.select("tr > td > ul > li").text();
 					laptop.setScreenSize(screenSize);
-				} else if (th.matches(".*Syst�me d'exploitation.*")) {
+				} else if (th.matches(".*Système d'exploitation.*")) {
 					os = e.select("tr > td > ul > li").text();
 					laptop.setOperatingSystem(os);
 				}
 
-				if (th.matches(".*Capacit� de stockage SSD.*")) {
+				if (th.matches(".*Capacité de stockage SSD.*")) {
 					stockage += " ssd " + e.select("tr > td > ul > li").text();
 					laptop.setStorage(stockage);
 				}
-				if (th.matches(".*Capacit� de disque dur.*")) {
+				if (th.matches(".*Capacité de disque dur.*")) {
 					stockage += " hdd " + e.select("tr > td > ul > li").text();
 					laptop.setStorage(stockage);
 				}
@@ -266,7 +266,7 @@ public class DartyScraper {
 			try {
 				log.info("am on the line : " + i + " url : " + linesLink.get(i));
 				String lapTopInfo = getLaptopInfo(linesLink.get(i), i);
-				BufferedWriter output = new BufferedWriter(new FileWriter("../sql.txt", true));
+				BufferedWriter output = new BufferedWriter(new FileWriter("../sql3.txt", true));
 				output.newLine();
 				output.write(lapTopInfo);
 				output.close();
@@ -283,7 +283,6 @@ public class DartyScraper {
 	}
 
 }
-
 /*
  * if (th.matches(".*stockage SSD.*")) { System.out.println("dkhelt hna 3");
  * stockage += " ssd " + e.select("tr > td > ul > li").text();

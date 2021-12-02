@@ -12,6 +12,7 @@ import com.scanner.demo.entities.Laptop;
 
 import me.tongfei.progressbar.ProgressBar;
 
+
 public class TopAchatScraper {
 
 	public static void main(String[] args) {
@@ -27,7 +28,7 @@ public class TopAchatScraper {
 				String currentPage = "https://www.topachat.com/pages/produits_cat_est_ordinateurs_puis_rubrique_est_wport_puis_page_est_" + i + ".html";
 				for(String link : getLinksForPage(currentPage)) {
 					countLaptop++;
-					System.out.println("Processing laptop n�" + countLaptop + "..");
+					System.out.println("Processing laptop n°" + countLaptop + "..");
 					scrapLaptopPage(link, laptops);
 				}
 			}
@@ -95,7 +96,7 @@ public class TopAchatScraper {
 			name = name.substring(0, name.indexOf("|")).trim();
 			String reference = doc.select("div > span").first().text();
 			String imageUri = "https:" + doc.getElementsByClass("main-image").attr("src").toString();
-			String price = doc.getElementsByAttributeValue("itemprop", "price").attr("content").toString() + "�";
+			String price = doc.getElementsByAttributeValue("itemprop", "price").attr("content").toString() + "€";
 			
 			String content, screenSize, screenResolution, cpu, dedicatedGpu, chipset, storage, ram, os, weight, gpu;
 			content = screenSize = screenResolution = cpu = dedicatedGpu = chipset = storage = ram = os = weight = gpu = "";
@@ -105,21 +106,21 @@ public class TopAchatScraper {
 				content = characteristic.select("div.caracDesc").text();
 				switch(characteristic.select("div.caracName").text()) {
 				case "Processeur":
-					cpu = content.substring(0, content.indexOf("Fr�quence :")).trim();
+					cpu = content.substring(0, content.indexOf("Fréquence :")).trim();
 					break;
 				case "Chipset":
 					chipset = content.trim();
 					break;
 				case "Carte graphique":
 					if(!content.contains("Pas de carte graphique")) {
-						if(content.contains("M�moire")) {
-							dedicatedGpu = content.substring(0, content.indexOf("M�moire :")).trim();
+						if(content.contains("Mémoire")) {
+							dedicatedGpu = content.substring(0, content.indexOf("Mémoire :")).trim();
 						} else if (content.contains("Configuration")) {
 							dedicatedGpu = content.substring(0, content.indexOf("Configuration :")).trim();
 						}
 					}
 					break;
-				case "M�moire (RAM)":
+				case "Mémoire (RAM)":
 					if(content.contains("Configuration")) {
 						ram = content.substring(0, content.indexOf("Configuration :")).trim();
 					} else {
@@ -139,8 +140,8 @@ public class TopAchatScraper {
 					}
 					screenSize = screenSize != null ? screenSize.replaceAll("[^\\d.,]", "") : screenSize;
 					
-					if(content.contains("R�solution") && content.contains("Type de dalle")) {
-						String resolutionInfos = content.substring(content.indexOf("R�solution : ") + 13, content.indexOf("Type de dalle :")).trim();
+					if(content.contains("Résolution") && content.contains("Type de dalle")) {
+						String resolutionInfos = content.substring(content.indexOf("Résolution : ") + 13, content.indexOf("Type de dalle :")).trim();
 						
 						if(resolutionInfos.contains("(") && resolutionInfos.contains(")")) {
 							screenResolution = resolutionInfos.substring(resolutionInfos.indexOf("(") + 1, resolutionInfos.lastIndexOf(")")).trim();
@@ -148,7 +149,7 @@ public class TopAchatScraper {
 							screenResolution = resolutionInfos.trim();
 						}
 					} else {
-						String resolutionInfos = content.substring(content.indexOf("R�solution : ") + 13).trim();
+						String resolutionInfos = content.substring(content.indexOf("Résolution : ") + 13).trim();
 						
 						if(resolutionInfos.contains("(") && resolutionInfos.contains(")")) {
 							screenResolution = resolutionInfos.substring(resolutionInfos.indexOf("(") + 1, resolutionInfos.indexOf(")")).trim();
@@ -156,7 +157,7 @@ public class TopAchatScraper {
 					}
 					
 					break;
-				case "Syst�me d'exploitation":
+				case "Système d'exploitation":
 					os = content.trim();
 					break;
 				case "Poids":

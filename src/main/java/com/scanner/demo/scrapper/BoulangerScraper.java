@@ -16,6 +16,7 @@ import com.scanner.demo.entities.Laptop;
 import com.scanner.demo.scrapper.DartyScraper;
 import lombok.extern.slf4j.Slf4j;
 
+
 @Slf4j
 public class BoulangerScraper {
 
@@ -29,7 +30,7 @@ public class BoulangerScraper {
 //		}
 
 		// log.info(getInfolaptop("https://www.boulanger.com/ref/1162601").toString());
-		
+		log.info("i start scrapping");
 		ArrayList<Laptop> laptopsInfos = getAllLaptopsInfo();
 		for (Laptop laptop : laptopsInfos) {
 			log.info(laptop.toString());
@@ -112,7 +113,7 @@ public class BoulangerScraper {
 			Thread.sleep(rand1);
 			String realUrl = lienTouspc + i;
 			Document doc = getLaptopHtml(realUrl);
-			if (doc.getAllElements().toString().contains("Votre s�lection ne correspond � aucun r�sultat")) {
+			if (doc.getAllElements().toString().contains("Votre sélection ne correspond à aucun résultat")) {
 				log.warn("i cant get this page its the last page : " + realUrl);
 				break;
 			}
@@ -159,19 +160,19 @@ public class BoulangerScraper {
 			price = doc.getElementsByClass("price__amount").text();
 			Elements elemts = doc.getElementsByClass("feature-item__content");
 			for (Element element : elemts) {
-				if (element.text().matches(".*Taille de l'�cran.*")) {
+				if (element.text().matches(".*Taille de l'écran.*")) {
 					screenSize = element.text().toString().split(":")[1].trim().toString();
 				}
-				if (element.text().matches(".*R�solution.*")) {
+				if (element.text().matches(".*Résolution.*")) {
 					screenresolution = screenresolution + " "
 							+ element.text().toString().split(":")[1].trim().toString();
 				}
-				if (element.text().matches(".*Type de r�solution.*")) {
+				if (element.text().matches(".*Type de résolution.*")) {
 					screenresolution = screenresolution + " "
 							+ element.text().toString().split(":")[1].trim().toString();
 				}
 
-				if (element.text().matches(".*R�f�rence du processeur.*")) {
+				if (element.text().matches(".*Référence du processeur.*")) {
 					cpu = element.text().toString().split(":")[1].trim().toString();
 				}
 
@@ -179,15 +180,15 @@ public class BoulangerScraper {
 					gpu = gpu + " " + element.text().toString().split(":")[1].trim().toString();
 				}
 
-				if (element.text().matches(".*M�moire vive (RAM).*")) {
+				if (element.text().matches(".*Mémoire vive (RAM).*")) {
 					ram = ram + " " + element.text().toString().split(":")[1].trim().toString();
 				}
 
-				if (element.text().matches(".*Type et capacit� totale de stockage.*")) {
+				if (element.text().matches(".*Type et capacité totale de stockage.*")) {
 					storage = storage + " " + element.text().toString().split(":")[1].trim().toString();
 				}
 
-				if (element.text().matches(".*Syst�me d'exploitation.*")) {
+				if (element.text().matches(".*Système d'exploitation.*")) {
 					operatingSystem = operatingSystem + " " + element.text().toString().split(":")[1].trim().toString();
 				}
 
