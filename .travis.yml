@@ -22,4 +22,12 @@ before_install:
   - chmod +x mvnw
 
 notifications:
-  webhooks: https://discord.com/api/webhooks/916116768731303957/XC4hl_xUqxWh29O3YmbXTI-nfVlLYt2xnBBSACRo2Lgl8N3s69dsxOjxDe4Sqi_mU4AH
+  #webhooks: https://discord.com/api/webhooks/916116768731303957/XC4hl_xUqxWh29O3YmbXTI-nfVlLYt2xnBBSACRo2Lgl8N3s69dsxOjxDe4Sqi_mU4AH
+  after_success:
+    - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
+    - chmod +x send.sh
+    - ./send.sh success $WEBHOOK_URL
+  after_failure:
+    - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
+    - chmod +x send.sh
+    - ./send.sh failure $WEBHOOK_URL
