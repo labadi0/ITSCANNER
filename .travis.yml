@@ -11,18 +11,7 @@ addons:
     organization: "labadi0"
 
 script:
-  # JaCoCo is used to have code coverage, "-Pcoverage" activates the maven profile in the pom.xml
-  #- mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=labadi0_learnTravisCi
-  #- mvn clean verify sonar:sonar -Pcoverage -Dsonar.projectKey=labadi0_learnTravisCi
   - mvn clean install sonar:sonar -Dsonar.projectKey=labadi0_IT_SCANNER
-
-services:
-  - mysql
-before_install:
-  - chmod +x mvnw
-
-notifications:
-  #webhooks: https://discord.com/api/webhooks/916116768731303957/XC4hl_xUqxWh29O3YmbXTI-nfVlLYt2xnBBSACRo2Lgl8N3s69dsxOjxDe4Sqi_mU4AH
   after_success:
     - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
     - chmod +x send.sh
@@ -31,3 +20,12 @@ notifications:
     - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
     - chmod +x send.sh
     - ./send.sh failure $WEBHOOK_URL
+
+services:
+  - mysql
+before_install:
+  - chmod +x mvnw
+
+notifications:
+  #webhooks: https://discord.com/api/webhooks/916116768731303957/XC4hl_xUqxWh29O3YmbXTI-nfVlLYt2xnBBSACRo2Lgl8N3s69dsxOjxDe4Sqi_mU4AH
+
