@@ -18,5 +18,10 @@ before_install:
   - chmod +x mvnw
 
 notifications:
-  email: labaditarekk@gmail.com
+  email:
+    - aissa.hasna123@gmail.com
+    - labaditarekk@gmail.com
+    - ouqechih@gmail.com
+    - sisalem.hassan@gmail.com
+    - idmbarksoufiane@gmail.com
   #webhooks: https://discord.com/api/webhooks/916116768731303957/XC4hl_xUqxWh29O3YmbXTI-nfVlLYt2xnBBSACRo2Lgl8N3s69dsxOjxDe4Sqi_mU4AH
