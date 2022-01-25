@@ -33,7 +33,7 @@ public class RueDuCommerceScraper {
 			
 		}*/
 		
-		System.out.println(getInfolaptop("https://www.rueducommerce.fr/p-vivobook-17-x705ma-bx179t-gris-asus-3194308-25765.html?articleOfferId=6754866"));
+		//System.out.println(getInfolaptop("https://www.rueducommerce.fr/p-vivobook-17-x705ma-bx179t-gris-asus-3194308-25765.html?articleOfferId=6754866"));
 	}
 
 	public static String getRandomUserAgent() {
