@@ -21,38 +21,14 @@ import lombok.extern.slf4j.Slf4j;
 public class FnacScraper {
 	
 	public static void main(String[] args) throws InterruptedException, IllegalAccessException {
-
-		/*ArrayList<Laptop> laptopsInfos = getAllLaptopsInfo();
-		LaptopPersistence lp=new LaptopPersistence();
-		lp.bulkInsertLaptop(laptopsInfos);
-		*/
-		/*for (Laptop laptop : laptopsInfos) {
-			System.out.println("here");
-			log.info(laptop.toString());
-			System.out.println(laptop.toString());
-			
-		}*/
-		//getLinksOfLaptops("https://www.cdiscount.com/informatique/ordinateurs-pc-portables/pc-portables/l-1070992.html#_his_");
-		getAllLaptopsInfo();
 		
-	//	System.out.println(getInfolaptop("https://www.fnac.com/PC-Ultra-Portable-Asus-Zenbook-ZENBOOK-13-OLED-EVO-3-UX325EA-KG356R-13-3-Intel-Core-i7-32-Go-RAM-1-To-SSD-Gris/a16343987/w-4#int=S:Nos%20offres%20du%20moment|Ordinateurs%20portables|230080|16343987|BL1|L1"));
+		System.out.println(getInfolaptop("https://www.fnac.com/PC-Portable-Lenovo-IdeaPad-3-17ADA05-17-3-AMD-Ryzen-5-8-Go-RAM-512-Go-SSD-Gris/a15182129/w-4"));
 	}
 
 	public static String getRandomUserAgent() {
 		Random randomGenerator = new Random();
 		ArrayList<String> userAgents = new ArrayList<>();
 		userAgents.add("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0");
-		/*userAgents.add("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6");
-		userAgents.add(
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36");
-		userAgents.add("Mozilla/5.0 (Android 7.1.1; Mobile; rv:93.0) Gecko/93.0 Firefox/93.0");
-		userAgents.add("Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0; MDDCJS)");
-		userAgents.add("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0");
-		userAgents.add(
-				"Mozilla/5.0 (Linux; Android 7.1.1; E6653) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.74 Mobile Safari/537.36");
-		userAgents.add("Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)");
-		userAgents.add(
-				"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36");*/
 		int index = randomGenerator.nextInt(userAgents.size());
 		String userAgent = userAgents.get(index);
 		return userAgent;
@@ -109,7 +85,7 @@ public class FnacScraper {
 
 		ArrayList<String> links = new ArrayList<>();
 		String laptopLink = "https://www.fnac.com";
-		for (int i = 0; i < 50; ++i) {
+		for (int i = 0; i < 26; ++i) {
 			int rand1 = getRandom(2000, 7000);
 			//Thread.sleep(rand1);
 			String realUrl = lienTouspc + i;
@@ -120,18 +96,18 @@ public class FnacScraper {
 			}
 			try {
 				
-				Elements elements = doc.getElementsByAttributeValue("class", "thumbnail-titleLink js-Recos-track js-Search-hashLink");
+				Elements elements = doc.getElementsByClass("thumbnail-titleLink js-Recos-track js-Search-hashLink");
 				int count = 0;
 				//System.out.println(elements);
 				for (Element element : elements) {
 					String link =  element.attr("href").trim();
 					count++;
-					System.out.println(link);
+					System.out.println("lien : *************************"+link);
 					if (!links.contains(link)) {
 						links.add(link);
 					}
 				}
-				//System.out.println("count"+count);
+				System.out.println("count"+count);
 			} catch (Exception e) {
 				//Log.error("i cant find link of laptops elements");
 				System.out.println("i cant find link of laptops elements");
@@ -146,7 +122,7 @@ public static Laptop getInfolaptop(String link) throws InterruptedException {
 		Document doc = getLaptopHtml(link);
 		Laptop laptop = new Laptop();
 		String title = "";
-		String source = "";
+		String source = "Fnac";
 		String uri = link;
 		String name = "";
 		String referance = "";
@@ -162,52 +138,50 @@ public static Laptop getInfolaptop(String link) throws InterruptedException {
 		String price = "";
 		String typestockage="";
 		try {
-			imageUri = doc.getElementsByAttributeValue("class", "f-productVisuals__mainMedia js-ProductVisuals-imagePreview").attr("src");
+			imageUri = doc.getElementsByAttributeValue("class", "f-productVisuals__mainMedia js-ProductVisuals-imagePreview").attr("src").trim();
 			System.out.println("image :"+imageUri);
 			
-			title=doc.getElementsByClass("f-productHeader-Title").text();
+			title=doc.getElementsByClass("f-productHeader-Title").text().trim();
 			System.out.println("titre : "+title); 
 		
-			price	= doc.getElementsByClass("f-priceBox-price f-priceBox-price--reco checked").text();
+			price	= doc.getElementsByClass("f-priceBox-price f-priceBox-price--reco checked").text().trim();
 			System.out.println("price : "+price); 
 			
             Elements elemts = doc.getElementsByAttributeValue("class", "f-productProperties__item");
 			
 			for (Element element : elemts) {
 				if (element.text().matches(".*Capacité de stockage.*")) {
-					storage = element.text().replaceFirst("Capacité de stockage", "").toString();
+					storage = element.text().replaceFirst("Capacité de stockage", "").trim().toString();
 				}
 				if (element.text().matches(".*RAM installée.*")) {
 					ram = element.text().replaceFirst("RAM installée", "").toString();
 				}
 				if (element.text().matches(".*Processeur.*")) {
-					cpu = element.text().replaceFirst("Processeur", "").toString();
+					cpu = element.text().replaceFirst("Processeur", "").trim().toString();
 				}
 				
 				if (element.text().matches(".*Carte graphique.*")) {
-					gpu = element.text().replaceFirst("Carte graphique", "").toString();
+					gpu = element.text().replaceFirst("Carte graphique", "").trim().toString();
 				}
 
 				if (element.text().matches(".*Résolution maximale de la carte graphique.*")) {
-					screenresolution = element.text().replaceFirst("Résolution maximale de la carte graphique", "").toString();
-				}
-				
-				if (element.text().matches(".*Type de disque dur.*")) {
-					typestockage = element.text().replaceFirst("Type de disque dur", "").toString();
+					screenresolution = element.text().replaceFirst("Résolution maximale de la carte graphique", "").trim().toString();
 				}
 				
 				if (element.text().matches(".*Système d'exploitation.*")) {
-					operatingSystem = element.text().replaceFirst("Système d'exploitation", "").toString();
+					operatingSystem = element.text().replaceFirst("Système d'exploitation", "").trim().toString();
 				}
 				
-				if (element.text().matches(".*Poids du produit.*")) {
-					weight = element.text().replaceFirst("Poids du produit", "").toString();
+				if (element.text().matches(".*Poids.*")) {
+					weight = element.text().replaceFirst("Poids", "").trim().toString();
 				}
 				
 				if (element.text().matches(".*Taille de l'écran.*")) {
-					screenSize = element.text().replaceFirst("Taille de l'écran", "").toString();
+					screenSize = element.text().replaceFirst("Taille de l'écran", "").replace("(pouces)", "").trim();
 				}
-
+				if (element.text().matches(".*Gamme.*")) {
+					referance = element.text().replaceFirst("Gamme", "").trim().toString();
+				}
 				
 			}
 			System.out.println("storage : "+storage); 
@@ -215,7 +189,7 @@ public static Laptop getInfolaptop(String link) throws InterruptedException {
 			System.out.println("Processeur : "+cpu);
 			System.out.println("gpu : "+gpu);
 			System.out.println("screenresolution : "+screenresolution);
-			System.out.println("typestockage : "+typestockage);
+			System.out.println("reference : "+referance);
 			System.out.println("operatingSystem : "+operatingSystem);
 			System.out.println("weight : "+weight);
 			System.out.println("screenSize : "+screenSize);
