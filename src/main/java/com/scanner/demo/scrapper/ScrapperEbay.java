@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -75,7 +76,7 @@ public class ScrapperEbay {
             System.out.println(url);
             for (Element element : divDescription) {
 				
-            	if(element.text().contains("Capacité du disque dur") || element.text().contains("Festplattenkapazität") || element.text().contains("Stockage")){
+            	if(element.text().contains("Capacitï¿½ du disque dur") || element.text().contains("Festplattenkapazitï¿½t") || element.text().contains("Stockage")){
             		Element etat = element.nextElementSibling();
             		storage = etat.text();
             		System.out.println("disque dure :" + etat.text());
@@ -87,7 +88,7 @@ public class ScrapperEbay {
             		System.out.println("Ram de pc :" + childRam.text());
             	}
             	
-            	if(element.text().contains("écran") || element.text().contains("Screen")){
+            	if(element.text().contains("ï¿½cran") || element.text().contains("Screen")){
             		Element childRam = element.nextElementSibling();
             		screenSize = childRam.text();
             		System.out.println("ecran de pc" + childRam.text());
@@ -99,13 +100,13 @@ public class ScrapperEbay {
             		System.out.println("processeur de pc" + childRam.text());
             	}
             	
-             	if(element.text().contains("Marque") || element.text().contains("Model") || element.text().contains("Modèle")){
+             	if(element.text().contains("Marque") || element.text().contains("Model") || element.text().contains("Modï¿½le")){
             		Element childRam = element.nextElementSibling();
             		name = childRam.text();
             		System.out.println("modele de pc :" + childRam.text());
             	}
              	
-            	if(element.text().contains("Système d'exploitation") || element.text().contains("Operating System")){
+            	if(element.text().contains("Systï¿½me d'exploitation") || element.text().contains("Operating System")){
             		Element childRam = element.nextElementSibling();
             		os = childRam.text();
             		System.out.println("systeme d'exploitation" + childRam.text());
