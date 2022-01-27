@@ -1,11 +1,6 @@
 package com.scanner.demo.scrapper;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
 
 import org.jsoup.Jsoup;
@@ -15,18 +10,16 @@ import org.jsoup.select.Elements;
 
 import com.scanner.demo.entities.Laptop;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
-public class RueDuCommerceScraper {
-
-	public static void main(String[] args) throws InterruptedException, IllegalAccessException {
+public class MaterielNet {
+public static void main(String[] args) throws InterruptedException, IllegalAccessException {
 		
 		//Pour écrire les infos dans la bd
 		/*LaptopPersistence lp=new LaptopPersistence();
 		lp.bulkInsertLaptop(getAllLaptopsInfo());*/
 		
-		getAllLaptopsInfo();
+		//getAllLaptopsInfo();
+		//getLinksOfLaptops("https://www.materiel.net/pc-portable/l409/");
+		getInfolaptop("https://www.materiel.net/produit/202003030071.html");
 	}
 
 	public static String getRandomUserAgent() {
@@ -74,10 +67,10 @@ public class RueDuCommerceScraper {
 		String referrer = getRandomWebSite();
 		try {
 
-			doc = Jsoup.connect(link).userAgent(agent).referrer(referrer).ignoreHttpErrors(true).ignoreContentType(true).timeout(10000)
+			doc = Jsoup.connect(link).userAgent(agent).referrer(referrer).ignoreHttpErrors(true).ignoreContentType(true).timeout(100000).maxBodySize(0)
 					.get();
 		} catch (Exception e) {
-			log.error("problem to get html page problem in getlaptophtml function");
+			//log.error("problem to get html page problem in getlaptophtml function");
 			e.printStackTrace();
 		}
 
@@ -98,19 +91,20 @@ public class RueDuCommerceScraper {
 	public static ArrayList<String> getLinksOfLaptops(String lienTouspc) throws InterruptedException {
 
 		ArrayList<String> links = new ArrayList<>();
-		String laptopLink = "https://www.rueducommerce.fr";
-		for (int i = 1; i < 41; i++) {
+		String laptopLink = "https://www.materiel.net";
+		for (int i = 0; i < 13; i++) {
 			int rand1 = getRandom(2000, 7000);
 			//Thread.sleep(rand1);
-			String realUrl = lienTouspc + i;
+			String realUrl = lienTouspc+i;
+			//System.out.println("real url"+realUrl);
 			Document doc = getLaptopHtml(realUrl);
 			if (doc.getAllElements().toString().contains("Votre sélection ne correspond à aucun résultat")){
-				log.warn("i cant get this page its the last page : " + realUrl);
+				//log.warn("i cant get this page its the last page : " + realUrl);
 				break;
 			}
 			try {
 
-				Elements elements = doc.select("a.item__image");
+				Elements elements = doc.select("a.c-product__link.o-link--reset");
 				int count = 0;
 				for (Element element : elements) {
 					String link = laptopLink + element.attr("href").trim();
@@ -122,7 +116,7 @@ public class RueDuCommerceScraper {
 				}
 				System.out.println(count);
 			} catch (Exception e) {
-				log.error("i cant find link of laptops elements");
+				//log.error("i cant find link of laptops elements");
 			}
 		}
 		return links;
@@ -135,7 +129,7 @@ public class RueDuCommerceScraper {
 		Document doc = getLaptopHtml(link);
 		Laptop laptop = new Laptop();
 		String title = "";
-		String source = "Rue Du Commerce";
+		String source = "Materiel.net";
 		String uri = link;
 		String name = "";
 		String reference = "";
@@ -151,16 +145,25 @@ public class RueDuCommerceScraper {
 		String price = "";
 		String typestockage="";
 		try {
-			title = doc.getElementsByAttributeValue("itemprop", "name").attr("content");
-			reference=doc.getElementsByAttributeValue("itemprop","productID").text();
-			imageUri = doc.getElementsByAttributeValue("itemprop", "image").attr("src");
+			title = doc.select("div.col-12.col-md-9 > h1").text();
 			System.out.println("Titre :"+title);
-			System.out.println("Reference :"+reference);
-			System.out.println("image :"+imageUri);
-			price = doc.getElementsByClass("dyn_prod_price").text()+"€";
+			price = doc.getElementsByClass("o-product__price o-product__price--promo").text();
 			System.out.println("price :"+price);
+			imageUri = doc.getElementsByAttributeValue("property", "og:image").attr("content");
+			System.out.println("image :"+imageUri);
 			
-			screenSize=doc.select("p.legende").text().split("-")[0].trim().toString();
+			Elements elemts = doc.select("table.c-specs__table");
+			//System.out.println("eleemssss"+elemts);
+			for (Element element : elemts) {
+				//System.out.println("eleem"+element);
+				if (element.text().contains(".*Système d'exploitation.*") ) {
+					screenresolution = element.text();
+				}
+			}
+			System.out.println("screen res"+screenresolution);
+			
+			/*
+				screenSize=doc.select("p.legende").text().split("-")[0].trim().toString();
 			System.out.println("screenSize : "+screenSize);
 			
 			Elements elemts = doc.getElementsByClass("group-item");
@@ -196,7 +199,7 @@ public class RueDuCommerceScraper {
 				}
 				 
 			}
-			
+			*/
 			System.out.println("screenresolution :"+screenresolution);
 			System.out.println("cpu : "+cpu);
 			System.out.println("gpu : "+gpu);
@@ -230,18 +233,16 @@ public class RueDuCommerceScraper {
 	
 	public static ArrayList<Laptop> getAllLaptopsInfo() throws InterruptedException, IllegalAccessException {
 		ArrayList<Laptop> laptopsinfos = new ArrayList<>();
-		ArrayList<String> lesLiens = getLinksOfLaptops("https://www.rueducommerce.fr/rayon/ordinateurs-64/pc-portable-5875?page=");
+		ArrayList<String> lesLiens = getLinksOfLaptops("https://www.materiel.net/pc-portable/l409/page");
 		for (String link : lesLiens) {
 			Laptop laptop = getInfolaptop(link);	
 			if( laptop.checkNotNull(laptop) == true) {
 			laptopsinfos.add(laptop);
 			System.out.println(laptop.toString());
 			}
-			log.warn(String.valueOf(laptopsinfos.size()));
+			//log.warn(String.valueOf(laptopsinfos.size()));
 		}
 		return laptopsinfos;
 	}
 	
-	
-
 }

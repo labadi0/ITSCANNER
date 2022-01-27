@@ -24,8 +24,8 @@ pe.click(pointOfProsses.x, pointOfProsses.y,1)
 
 #### show process
 
-hideProcessOff = pe.locateCenterOnScreen('./botoff.png')
-hideProcessOn = pe.locateCenterOnScreen('./boton.png')
+hideProcessOff = pe.locateCenterOnScreen('./botoff1.png')
+hideProcessOn = pe.locateCenterOnScreen('./boton1.png')
 
 if hideProcessOff is None : 
     pe.click(hideProcessOn.x, hideProcessOn.y,2)

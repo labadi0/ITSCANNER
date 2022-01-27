@@ -22,13 +22,21 @@ public class FnacScraper {
 	
 	public static void main(String[] args) throws InterruptedException, IllegalAccessException {
 		
-		System.out.println(getInfolaptop("https://www.fnac.com/PC-Portable-Lenovo-IdeaPad-3-17ADA05-17-3-AMD-Ryzen-5-8-Go-RAM-512-Go-SSD-Gris/a15182129/w-4"));
+		//System.out.println(getInfolaptop("https://www.fnac.com/PC-Portable-Lenovo-IdeaPad-3-17ADA05-17-3-AMD-Ryzen-5-8-Go-RAM-512-Go-SSD-Gris/a15182129/w-4"));
+	
+		//Pour écrire les infos dans la bd
+		LaptopPersistence lp=new LaptopPersistence();
+		lp.bulkInsertLaptop(getAllLaptopsInfo());
+		
+		//getAllLaptopsInfo();
 	}
 
 	public static String getRandomUserAgent() {
 		Random randomGenerator = new Random();
 		ArrayList<String> userAgents = new ArrayList<>();
-		userAgents.add("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0");
+	
+		userAgents.add(
+				"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0");
 		int index = randomGenerator.nextInt(userAgents.size());
 		String userAgent = userAgents.get(index);
 		return userAgent;
@@ -85,7 +93,7 @@ public class FnacScraper {
 
 		ArrayList<String> links = new ArrayList<>();
 		String laptopLink = "https://www.fnac.com";
-		for (int i = 0; i < 26; ++i) {
+		for (int i = 1; i < 26; i++) {
 			int rand1 = getRandom(2000, 7000);
 			//Thread.sleep(rand1);
 			String realUrl = lienTouspc + i;
@@ -96,13 +104,13 @@ public class FnacScraper {
 			}
 			try {
 				
-				Elements elements = doc.getElementsByClass("thumbnail-titleLink js-Recos-track js-Search-hashLink");
+				Elements elements = doc.select("a.Article-title.js-minifa-title.js-Search-hashLink");
 				int count = 0;
-				//System.out.println(elements);
+				System.out.println(elements);
 				for (Element element : elements) {
 					String link =  element.attr("href").trim();
 					count++;
-					System.out.println("lien : *************************"+link);
+					System.out.println("lien : **********"+i+"*********"+link);
 					if (!links.contains(link)) {
 						links.add(link);
 					}
@@ -177,7 +185,7 @@ public static Laptop getInfolaptop(String link) throws InterruptedException {
 				}
 				
 				if (element.text().matches(".*Taille de l'écran.*")) {
-					screenSize = element.text().replaceFirst("Taille de l'écran", "").replace("(pouces)", "").trim();
+					screenSize = element.text().replaceFirst("Taille de l'écran", "").replace("(pouces)", "").trim().replace("\"", "");
 				}
 				if (element.text().matches(".*Gamme.*")) {
 					referance = element.text().replaceFirst("Gamme", "").trim().toString();
