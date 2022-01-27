@@ -1,4 +1,4 @@
-package scrapper;
+package com.scanner.demo.scrapper;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
