@@ -10,7 +10,7 @@ import org.jsoup.select.Elements;
 
 import com.scanner.demo.entities.Laptop;
 
-public class MaterielNet {
+public class MaterielNetScraper {
 public static void main(String[] args) throws InterruptedException, IllegalAccessException {
 		
 		//Pour écrire les infos dans la bd
@@ -182,7 +182,7 @@ public static void main(String[] args) throws InterruptedException, IllegalAcces
 					screenresolution = element.select("td.value").text().replace("pixels", "");
 				}
 				if (element.text().matches(".*Poids.*")) {
-					weight = element.select("td.value").text().replace("pixels", "");
+					weight = element.select("td.value").text();
 				}
 				if (element.text().matches(".*Taille de l'écran.*")) {
 					screenSize = element.select("td.value").text().replace("pouces", "");
