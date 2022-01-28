@@ -13,7 +13,7 @@ public class CallVpn {
 
 	public static void setAdressIpVPN() throws IOException {
 		String[] cmd = { "python",
-				"C:\\Users\\TAREK\\Documents\\workspace-spring-tool-suite-4-4.9.0.RELEASE\\IT_Scanner\\bot_windows\\bot.py" };
+				"C:\\Users\\aissa\\eclipse-workspace\\IT_SCANNER\\bot_windows\\bot_1.py" };
 		// Runtime.getRuntime().exec(cmd);
 		Runtime r = Runtime.getRuntime();
 		Process p = r.exec(cmd);

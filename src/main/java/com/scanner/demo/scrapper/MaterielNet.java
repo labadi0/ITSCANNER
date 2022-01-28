@@ -19,7 +19,7 @@ public static void main(String[] args) throws InterruptedException, IllegalAcces
 		
 		//getAllLaptopsInfo();
 		//getLinksOfLaptops("https://www.materiel.net/pc-portable/l409/");
-		getInfolaptop("https://www.materiel.net/produit/202003030071.html");
+		getInfolaptop("https://www.materiel.net/produit/202103010222.html");
 	}
 
 	public static String getRandomUserAgent() {
@@ -121,8 +121,7 @@ public static void main(String[] args) throws InterruptedException, IllegalAcces
 		}
 		return links;
 	}
-
-
+	
 	public static Laptop getInfolaptop(String link) throws InterruptedException {
 		int rand1 = getRandom(2000, 7000);
 		//Thread.sleep(rand1);
@@ -145,62 +144,63 @@ public static void main(String[] args) throws InterruptedException, IllegalAcces
 		String price = "";
 		String typestockage="";
 		try {
+			System.out.println("source : "+source);
+			System.out.println("uri : "+uri);
 			title = doc.select("div.col-12.col-md-9 > h1").text();
 			System.out.println("Titre :"+title);
-			price = doc.getElementsByClass("o-product__price o-product__price--promo").text();
+			
+			
+			if(doc.getElementsByClass("o-product__price o-product__price--promo").first().text().isEmpty())
+			{
+				price = doc.getElementsByClass("o-product__price").first().text();
+			}else
+				price = doc.getElementsByClass("o-product__price o-product__price--promo").first().text();
+				
+			
 			System.out.println("price :"+price);
 			imageUri = doc.getElementsByAttributeValue("property", "og:image").attr("content");
 			System.out.println("image :"+imageUri);
 			
-			Elements elemts = doc.select("table.c-specs__table");
-			//System.out.println("eleemssss"+elemts);
-			for (Element element : elemts) {
-				//System.out.println("eleem"+element);
-				if (element.text().contains(".*Système d'exploitation.*") ) {
-					screenresolution = element.text();
-				}
-			}
-			System.out.println("screen res"+screenresolution);
-			
-			/*
-				screenSize=doc.select("p.legende").text().split("-")[0].trim().toString();
-			System.out.println("screenSize : "+screenSize);
-			
-			Elements elemts = doc.getElementsByClass("group-item");
+			Elements elemts = doc.select("table.table.c-specs__table > tbody > tr.feature");
 			
 			for (Element element : elemts) {
-				if (element.text().matches(".*Résolution de l'écran Pixels.*") || element.text().matches(".*Résolution maximale.*") || element.text().matches(".*Résolution de l'écran.*") ) {
-					screenresolution = element.text().toString().split(":")[1].trim().toString();
+				if (element.text().matches(".*Système d'exploitation.*")) {
+					operatingSystem = element.select("td.value").text();
 				}
-				if (element.text().matches(".*Modèle du processeur portable.*") || element.text().matches(".*Processeur.*")) {
-					cpu = element.text().toString().split(":")[1].trim().toString();
+				if (element.text().matches(".*Taille de la mémoire.*")) {
+					ram = element.select("td.value").text();
 				}
-				if (element.text().matches(".*Description carte graphique.*") || element.text().matches(".*Type de carte graphique.*")) {
-					gpu = element.text().toString().split(":")[1].trim().toString();
-				}
-				if (element.text().matches(".*Mémoire.*") || element.text().matches(".*Mémoire vive installée (Go).*")) {
-					ram = element.text().toString().split(":")[1].trim().toString()+" Go";
-				}
-				
-				if (element.text().matches(".*Type de stockage.*")) {
-					typestockage = element.text().toString().split(":")[1].trim().toString()+"";	
-				}
-				
-				if (element.text().matches(".*Hard drives.*") || element.text().matches(".*Capacité SSD.*") || element.text().matches(".*Capacité totale de stockage .*")) {
-					storage = element.text().toString().split(":")[1].trim().toString();
-					storage = typestockage+" "+storage;
-				}
-				
-				if (element.text().matches(".*Type de Système d'exploitation.*") || element.text().matches(".*Version du système d'exploitation.*") || element.text().matches(".*Version de l'OS.*")  ) {
-					operatingSystem = element.text().toString().split(":")[1].trim().toString();
-				}
-				if (element.text().matches(".*Poids kg.*") ) {
-					weight = element.text().toString().split(":")[1].trim().toString()+" kg";
-				}
-				 
 			}
-			*/
+			Elements elemts_list2 = doc.select("table.table.c-specs__table > tbody > tr");
+			
+			for (Element element : elemts_list2) {
+				
+				if (element.text().matches(".*Type de processeur.*")) {
+					cpu = element.select("td.value").text();
+				}
+				if (element.text().matches(".*Résolution Max.*")) {
+					screenresolution = element.select("td.value").text().replace("pixels", "");
+				}
+				if (element.text().matches(".*Poids.*")) {
+					weight = element.select("td.value").text().replace("pixels", "");
+				}
+				if (element.text().matches(".*Taille de l'écran.*")) {
+					screenSize = element.select("td.value").text().replace("pouces", "");
+				}
+				if (element.text().matches(".*Disque dur.*")) {
+					storage = element.select("td.value").text();
+				}
+				if (element.text().matches(".*Gamme.*")) {
+					reference = element.select("td.value").text();
+				}
+				if (element.text().matches(".*Chipset graphique.*")) {
+					gpu = element.select("td.value").text();
+				}
+			}
+			
 			System.out.println("screenresolution :"+screenresolution);
+			System.out.println("screensize :"+screenSize);
+			System.out.println("reference : "+reference);
 			System.out.println("cpu : "+cpu);
 			System.out.println("gpu : "+gpu);
 			System.out.println("ram : "+ram);
@@ -226,8 +226,6 @@ public static void main(String[] args) throws InterruptedException, IllegalAcces
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-
-		
 		return laptop;
 	}
 	

@@ -22,8 +22,8 @@ public class FnacScraper {
 	
 	public static void main(String[] args) throws InterruptedException, IllegalAccessException {
 		
-		//System.out.println(getInfolaptop("https://www.fnac.com/PC-Portable-Lenovo-IdeaPad-3-17ADA05-17-3-AMD-Ryzen-5-8-Go-RAM-512-Go-SSD-Gris/a15182129/w-4"));
-	
+		System.out.println(getInfolaptop("https://www.fnac.com/PC-Portable-Lenovo-IdeaPad-3-17ADA05-17-3-AMD-Ryzen-5-8-Go-RAM-512-Go-SSD-Gris/a15182129/w-4"));
+		//getInfolaptop("https://www.fnac.com/PC-Portable-Lenovo-IdeaPad-3-17ADA05-17-3-AMD-Ryzen-5-8-Go-RAM-512-Go-SSD-Gris/a15182129/w-4");
 		//Pour écrire les infos dans la bd
 		LaptopPersistence lp=new LaptopPersistence();
 		lp.bulkInsertLaptop(getAllLaptopsInfo());
@@ -35,8 +35,8 @@ public class FnacScraper {
 		Random randomGenerator = new Random();
 		ArrayList<String> userAgents = new ArrayList<>();
 	
-		userAgents.add(
-				"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0");
+		userAgents.add("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0");
+		
 		int index = randomGenerator.nextInt(userAgents.size());
 		String userAgent = userAgents.get(index);
 		return userAgent;
@@ -69,7 +69,7 @@ public class FnacScraper {
 
 			doc = Jsoup.connect(link).userAgent(agent).referrer(referrer).ignoreHttpErrors(true).ignoreContentType(true).timeout(10000).maxBodySize(0)
 					.get();
-			//System.out.println("document : "+doc);
+			System.out.println("document : "+doc);
 		} catch (Exception e) {
 //			log.error("problem to get html page problem in getlaptophtml function");
 			e.printStackTrace();
@@ -228,7 +228,7 @@ public static Laptop getInfolaptop(String link) throws InterruptedException {
 	}
 public static ArrayList<Laptop> getAllLaptopsInfo() throws InterruptedException, IllegalAccessException {
 	ArrayList<Laptop> laptopsinfos = new ArrayList<>();
-	ArrayList<String> lesLiens = getLinksOfLaptops("https://www.fnac.com/Ordinateurs-portables/shi48967/w-4");
+	ArrayList<String> lesLiens = getLinksOfLaptops("https://www.fnac.com/Ordinateurs-portables/shi48967/w-4?PageIndex=");
 	for (String link : lesLiens) {
 		Laptop laptop = getInfolaptop(link);	
 		if( laptop.checkNotNull(laptop) == true) {
