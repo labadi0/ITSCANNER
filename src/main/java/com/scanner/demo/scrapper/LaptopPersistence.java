@@ -11,8 +11,8 @@ import com.scanner.demo.entities.Laptop;
 
 
 public class LaptopPersistence {
-	private static final String CREATE_LAPTOP_TABLE = "CREATE DATABASE IF NOT EXISTS `dealhunter`;"
-			+ "USE `dealhunter`;"
+	private static final String CREATE_LAPTOP_TABLE = "CREATE DATABASE IF NOT EXISTS `dealhunter_matrielNet`;"
+			+ "USE `dealhunter_matrielNet`;"
 			+ "CREATE TABLE IF NOT EXISTS `laptop` ("
 			+ "    `laptop_id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,"
 			+ "    `source` VARCHAR(255) NOT NULL,"
@@ -71,7 +71,7 @@ public class LaptopPersistence {
 	        connection = JdbcConnection.getConnection();
 	        connection.setAutoCommit(false);
 
-	        String compiledQuery = "INSERT INTO dealhunter.laptop(source, uri, name, reference, image_uri, screen_size, screen_resolution, cpu, gpu, ram, storage, os, weight, price)" +
+	        String compiledQuery = "INSERT INTO dealhunter_matrielNet.laptop(source, uri, name, reference, image_uri, screen_size, screen_resolution, cpu, gpu, ram, storage, os, weight, price)" +
 	                " VALUES" + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	        preparedStatement = connection.prepareStatement(compiledQuery);
 

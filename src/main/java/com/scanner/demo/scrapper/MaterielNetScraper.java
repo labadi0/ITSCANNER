@@ -14,12 +14,12 @@ public class MaterielNetScraper {
 public static void main(String[] args) throws InterruptedException, IllegalAccessException {
 		
 		//Pour écrire les infos dans la bd
-		/*LaptopPersistence lp=new LaptopPersistence();
-		lp.bulkInsertLaptop(getAllLaptopsInfo());*/
+		LaptopPersistence lp=new LaptopPersistence();
+		lp.bulkInsertLaptop(getAllLaptopsInfo());
 		
 		//getAllLaptopsInfo();
-		//getLinksOfLaptops("https://www.materiel.net/pc-portable/l409/");
-		getInfolaptop("https://www.materiel.net/produit/202103010222.html");
+		//getLinksOfLaptops("https://www.materiel.net/pc-portable/l409/page");
+		//getInfolaptop("https://www.materiel.net/produit/202109220063.html");
 	}
 
 	public static String getRandomUserAgent() {
@@ -70,7 +70,7 @@ public static void main(String[] args) throws InterruptedException, IllegalAcces
 			doc = Jsoup.connect(link).userAgent(agent).referrer(referrer).ignoreHttpErrors(true).ignoreContentType(true).timeout(100000).maxBodySize(0)
 					.get();
 		} catch (Exception e) {
-			//log.error("problem to get html page problem in getlaptophtml function");
+			System.out.println("problem to get html page problem in getlaptophtml function");
 			e.printStackTrace();
 		}
 
@@ -92,20 +92,20 @@ public static void main(String[] args) throws InterruptedException, IllegalAcces
 
 		ArrayList<String> links = new ArrayList<>();
 		String laptopLink = "https://www.materiel.net";
+		int count =0;
 		for (int i = 0; i < 13; i++) {
 			int rand1 = getRandom(2000, 7000);
 			//Thread.sleep(rand1);
-			String realUrl = lienTouspc+i;
-			//System.out.println("real url"+realUrl);
+			String realUrl = lienTouspc + i;
 			Document doc = getLaptopHtml(realUrl);
 			if (doc.getAllElements().toString().contains("Votre sélection ne correspond à aucun résultat")){
-				//log.warn("i cant get this page its the last page : " + realUrl);
+				System.out.println("i cant get this page its the last page : " + realUrl);
 				break;
 			}
+
 			try {
 
-				Elements elements = doc.select("a.c-product__link.o-link--reset");
-				int count = 0;
+				Elements elements = doc.getElementsByClass("c-product__link o-link--reset");
 				for (Element element : elements) {
 					String link = laptopLink + element.attr("href").trim();
 					count++;
@@ -116,7 +116,7 @@ public static void main(String[] args) throws InterruptedException, IllegalAcces
 				}
 				System.out.println(count);
 			} catch (Exception e) {
-				//log.error("i cant find link of laptops elements");
+				System.out.println("i cant find link of laptops elements");
 			}
 		}
 		return links;
@@ -148,20 +148,15 @@ public static void main(String[] args) throws InterruptedException, IllegalAcces
 			System.out.println("uri : "+uri);
 			title = doc.select("div.col-12.col-md-9 > h1").text();
 			System.out.println("Titre :"+title);
-			
-			
-			if(doc.getElementsByClass("o-product__price o-product__price--promo").first().text().isEmpty())
-			{
-				price = doc.getElementsByClass("o-product__price").first().text();
-			}else
-				price = doc.getElementsByClass("o-product__price o-product__price--promo").first().text();
-				
-			
+		
+			price = doc.getElementsByClass("row align-items-center justify-content-center justify-content-lg-start mb-5 c-product__cart-zone c-unsalable-product invisible d-none d-md-flex").attr("data-product-price-vat-on").replace(".", "€");
 			System.out.println("price :"+price);
+			
 			imageUri = doc.getElementsByAttributeValue("property", "og:image").attr("content");
 			System.out.println("image :"+imageUri);
 			
 			Elements elemts = doc.select("table.table.c-specs__table > tbody > tr.feature");
+			//System.out.println("eleements 1 :"+elemts);
 			
 			for (Element element : elemts) {
 				if (element.text().matches(".*Système d'exploitation.*")) {
@@ -179,13 +174,13 @@ public static void main(String[] args) throws InterruptedException, IllegalAcces
 					cpu = element.select("td.value").text();
 				}
 				if (element.text().matches(".*Résolution Max.*")) {
-					screenresolution = element.select("td.value").text().replace("pixels", "");
+					screenresolution = element.select("td.value").text();
 				}
 				if (element.text().matches(".*Poids.*")) {
 					weight = element.select("td.value").text();
 				}
 				if (element.text().matches(".*Taille de l'écran.*")) {
-					screenSize = element.select("td.value").text().replace("pouces", "");
+					screenSize = element.select("td.value").text();
 				}
 				if (element.text().matches(".*Disque dur.*")) {
 					storage = element.select("td.value").text();
@@ -207,6 +202,7 @@ public static void main(String[] args) throws InterruptedException, IllegalAcces
 			System.out.println("storage : "+storage);
 			System.out.println("operatingSystem : "+operatingSystem);
 			System.out.println("weight : "+weight);
+			System.out.println("******************************************************");
 			
 			laptop.setTitle(title);
 			laptop.setSource(source);
@@ -238,7 +234,7 @@ public static void main(String[] args) throws InterruptedException, IllegalAcces
 			laptopsinfos.add(laptop);
 			System.out.println(laptop.toString());
 			}
-			//log.warn(String.valueOf(laptopsinfos.size()));
+			System.out.println(String.valueOf(laptopsinfos.size()));
 		}
 		return laptopsinfos;
 	}

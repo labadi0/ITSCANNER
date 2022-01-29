@@ -23,10 +23,10 @@ public class RueDuCommerceScraper {
 	public static void main(String[] args) throws InterruptedException, IllegalAccessException {
 		
 		//Pour écrire les infos dans la bd
-		/*LaptopPersistence lp=new LaptopPersistence();
-		lp.bulkInsertLaptop(getAllLaptopsInfo());*/
+		LaptopPersistence lp=new LaptopPersistence();
+		lp.bulkInsertLaptop(getAllLaptopsInfo());
 		
-		getAllLaptopsInfo();
+		//getAllLaptopsInfo();
 	}
 
 	public static String getRandomUserAgent() {
