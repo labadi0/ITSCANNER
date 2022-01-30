@@ -93,7 +93,8 @@ public static void main(String[] args) throws InterruptedException, IllegalAcces
 		ArrayList<String> links = new ArrayList<>();
 		String laptopLink = "https://www.materiel.net";
 		int count =0;
-		for (int i = 0; i < 13; i++) {
+		for (int i = 0; i < 12; i++) {
+			//ça bloque parfois quand on est dans la 2ème page, c'est pour ça je récupère page par page
 			int rand1 = getRandom(2000, 7000);
 			//Thread.sleep(rand1);
 			String realUrl = lienTouspc + i;
